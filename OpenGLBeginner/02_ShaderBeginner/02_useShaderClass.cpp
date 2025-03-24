@@ -76,7 +76,8 @@ int main()
 		shaderVertPos2Color.use();
 		shaderVertPos2Color.setFloat("xOffset", -0.5f);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
