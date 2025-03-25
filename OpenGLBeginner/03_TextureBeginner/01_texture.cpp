@@ -13,6 +13,8 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+float mixValue = 0.5f; // 默认混合值
+
 int main()
 {
 	//std::cout << __cplusplus << std::endl;
@@ -54,9 +56,9 @@ int main()
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	//设置环绕、过滤方式
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // 只有纹理缩小才能用MipMap
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	//加载生成纹理
 	int width, height, nrChannels;
@@ -75,24 +77,26 @@ int main()
 	unsigned int texture2;
 	glGenTextures(1, &texture2);
 	glBindTexture(GL_TEXTURE_2D, texture2);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float boarderColor[] = { 1.0f,0.0f,0.5f,1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, boarderColor);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//stbi_set_flip_vertically_on_load(true); // 指定一次即可
 	data = stbi_load("../../Assets/Texture/awesomeface.png", &width, &height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); // 注意PNG是4通道RGBA
-		glGenerateMipmap(GL_TEXTURE_2D); 
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
-	
-	
+
+
 	/// 顶点
 	float vertices[] = {
 		-0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f, 0.0f,0.0f,	//左下
@@ -107,6 +111,21 @@ int main()
 	//	0.5f,0.5f,0.0f, 1.0f,0.0f,1.0f, 2.0f,2.0f,	//右上
 	//	0.5f,-0.5f,0.0f, 1.0f,1.0f,0.0f, 2.0f,0.0f	//右下
 	//}; // 验证wrap效果，纹理坐标超出[0,1]范围
+
+	//float vertices[] = {
+	//	-0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f, 0.25f,0.25f,	//左下
+	//	-0.5f,0.5f,0.0f, 0.0f,1.0f,0.0f, 0.25f,0.75f,	//左上
+	//	0.5f,0.5f,0.0f, 1.0f,0.0f,1.0f, 0.75f,0.75f,	//右上
+	//	0.5f,-0.5f,0.0f, 1.0f,1.0f,0.0f, 0.75f,0.25f	//右下
+	//}; // 只显示纹理图像中间部分
+
+	//float vertices[] = {
+	//	-0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f, 0.45f,0.45f,	//左下
+	//	-0.5f,0.5f,0.0f, 0.0f,1.0f,0.0f, 0.45f,0.55f,	//左上
+	//	0.5f,0.5f,0.0f, 1.0f,0.0f,1.0f, 0.55f,0.55f,	//右上
+	//	0.5f,-0.5f,0.0f, 1.0f,1.0f,0.0f, 0.55f,0.45f	//右下
+	//}; // 采用纹理很小块，能看到单个像素点，配合放大过滤中的GL_NEAREST可以看到效果
+
 	unsigned int indices[] = {
 		0,1,3,
 		1,2,3
@@ -133,15 +152,17 @@ int main()
 
 	/// 设置着色器中纹理uniform变量对应的纹理单元
 	// 只需要设置一次，所以放在循环外，需要指定着色器
-	shader2.use(); 
+	shader2.use();
 	glUniform1i(glGetUniformLocation(shader2.ID, "texture1"), 0); // 手动设置
 	shader2.setInt("texture2", 1); // 或者使用着色器类设置
+
+
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 状态设置
 		glClear(GL_COLOR_BUFFER_BIT); // 状态使用
-	
+
 		/// 应用纹理
 		glActiveTexture(GL_TEXTURE0); // 激活一个纹理单元(默认激活GL_TEXTURE0)
 		glBindTexture(GL_TEXTURE_2D, texture); // 绑定到该纹理单元
@@ -149,16 +170,22 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		shader2.use();
+		shader2.setFloat("mixValue", mixValue);
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	
+
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+	glDeleteTextures(1, &texture);
+	glDeleteTextures(1, &texture2);
+	glDeleteProgram(shader.ID);
+	glDeleteProgram(shader2.ID);
 
 	glfwTerminate();
 	return 0;
@@ -171,5 +198,17 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		mixValue -= 0.01f;
+		if (mixValue < 0.0f) {
+			mixValue = 0.0f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		mixValue += 0.01f;
+		if (mixValue > 1.0f) {
+			mixValue = 1.0f;
+		}
 	}
 }
