@@ -23,10 +23,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="01_texture.cpp">
+    <ClCompile Include="01_transform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="02_3D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="03_cubic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,6 +41,15 @@
       <Filter>源文件\Shaders</Filter>
     </None>
     <None Include="1.vert">
+      <Filter>源文件\Shaders</Filter>
+    </None>
+    <None Include="2_3D.vert">
+      <Filter>源文件\Shaders</Filter>
+    </None>
+    <None Include="3_cubic.vert">
+      <Filter>源文件\Shaders</Filter>
+    </None>
+    <None Include="2.frag">
       <Filter>源文件\Shaders</Filter>
     </None>
   </ItemGroup>
