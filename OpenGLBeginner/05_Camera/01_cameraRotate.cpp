@@ -190,7 +190,8 @@ int main()
 	// 手动构建view矩阵
 	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 	glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
-	glm::mat4 R_inverse( /// 实际上，mat4按列向量接收参数，所以这样顺序输入的话恰好是想要的矩阵的转置
+	 // 分别算w2c的R(R_inverse变量)和T（T_inverse变量）
+	glm::mat4 R_inverse( /// ，实际上，mat4按列向量接收参数，所以这样顺序输入的话恰好是想要的矩阵的转置,所以后续对这个矩阵进行纠正
 		cameraRight.x, cameraRight.y, cameraRight.z, 0.0f,
 		cameraUp.x, cameraUp.y, cameraUp.z, 0.0f,
 		cameraDirection.x, cameraDirection.y, cameraDirection.z, 0.0f,
@@ -202,7 +203,7 @@ int main()
 		0.f, 0.f, 1.f, -cameraPos.z,
 		0.f, 0.f, 0.f, 1.f
 	);
-	R_inverse = glm::transpose(R_inverse); // 纠正上述错误
+	R_inverse = glm::transpose(R_inverse); // 纠正上述列优先问题导致的矩阵构造错误
 	T_inverse = glm::transpose(T_inverse);
 	glm::mat4 view_manual = R_inverse * T_inverse;
 	// 注：访问某个元素时，mat[col][row]，即mat[col]是列向量，mat[col][row]是列向量的第row个元素
