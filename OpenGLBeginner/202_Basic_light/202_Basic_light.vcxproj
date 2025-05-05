@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1625a316-052a-42a6-88b5-3f1944ef197e}</ProjectGuid>
+    <ProjectGuid>{E8C5AB77-6404-4E83-A437-8E41305AABC9}</ProjectGuid>
     <RootNamespace>OpenGL_201_color1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>202_Basic_light</ProjectName>
@@ -74,12 +74,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>D:\Desktop\opengl\LearnOpenGL\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Desktop\opengl\LearnOpenGL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>D:\Desktop\opengl\LearnOpenGL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include;D:\Desktop\opengl\LearnOpenGL\include\imgui</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>D:\Desktop\opengl\LearnOpenGL\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Desktop\opengl\LearnOpenGL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>D:\Desktop\opengl\LearnOpenGL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include;D:\Desktop\opengl\LearnOpenGL\include\imgui</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -150,6 +150,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\glad\glad.c" />
+    <ClCompile Include="..\..\include\imgui\src\imgui.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_demo.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_draw.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="..\..\include\imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="01_basicLight.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -158,8 +166,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="03_basicLight_Gouraud.cpp" />
-    <ClCompile Include="glad.c" />
+    <ClCompile Include="03_basicLight_Gouraud.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="04_02_with_imgui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />

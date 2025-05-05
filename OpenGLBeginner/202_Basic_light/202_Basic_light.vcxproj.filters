@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\include\imgui\src\imgui.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_demo.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_draw.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_impl_glfw.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_impl_opengl3.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_tables.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\imgui\src\imgui_widgets.cpp">
+      <Filter>其他cpp\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="01_basicLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="02_basicLight_view_phong.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="03_basicLight_Gouraud.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="04_02_with_imgui.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\glad\glad.c">
+      <Filter>其他cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="light.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="object_phong_view.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="object_phong_world.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phong_view.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="phong_world.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Gouraud.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Gouraud.vert">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{c59ca266-28f1-438b-94f5-20afb95e4875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{7b954677-b965-4bac-8f29-0e2ad623aa10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{cb145fa1-60df-4e28-824b-58646c05d617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="其他cpp">
+      <UniqueIdentifier>{3e37af29-6e14-410b-9c01-f8c4bd44c61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="其他cpp\imgui">
+      <UniqueIdentifier>{829385df-b184-4473-99bc-aa11f847b243}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
