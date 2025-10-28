@@ -1,5 +1,5 @@
 # MyLearnOpenGL
-> learnopengl-cn.github.io 学习实践
+> [learnopengl](learnopengl-cn.github.io) 学习实践
 
 ## 环境
 - windows
