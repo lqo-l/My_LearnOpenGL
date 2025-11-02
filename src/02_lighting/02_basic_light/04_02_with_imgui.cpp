@@ -1,9 +1,9 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <shader.h>
-#include <camera.h>
-#include <utils.h>
+#include <shader.hpp>
+#include <camera.hpp>
+#include <utils.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>

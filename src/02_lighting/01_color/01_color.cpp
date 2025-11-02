@@ -1,9 +1,9 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <shader.h>
-#include <camera.h>
-#include <utils.h>
+#include <shader.hpp>
+#include <camera.hpp>
+#include <utils.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>

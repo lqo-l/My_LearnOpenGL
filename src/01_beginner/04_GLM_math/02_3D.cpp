@@ -1,8 +1,8 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <shader.h>
-#include <utils.h>
+#include <shader.hpp>
+#include <utils.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
