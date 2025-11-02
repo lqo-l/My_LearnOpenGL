@@ -1,3 +1,8 @@
 build
 bak
 .vscode
+
+# GNU Global Ignore File
+GPATH
+GTAGS
+GRTAGS
