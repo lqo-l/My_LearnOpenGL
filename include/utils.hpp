@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <stb_image.h>
 
 namespace fs = std::filesystem;
 
@@ -22,7 +23,6 @@ inline std::string getDir(const char *filePath)
 {
 	return fs::absolute(fs::path(filePath)).parent_path().string();
 }
-
 
 /**
  * @brief 获取相对于可执行文件的素材文件绝对路径
@@ -50,7 +50,7 @@ inline std::string getAssetAbsPath(const char *argv0, const std::string &relativ
 /// <param name="target">看向的目标</param>
 /// <param name="up">上向量</param>
 /// <returns>model矩阵</returns>
-glm::mat4 ModelLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up = glm::vec3(0.f, 1.f, 0.f))
+inline glm::mat4 ModelLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up = glm::vec3(0.f, 1.f, 0.f))
 {
 	glm::mat4 model(1.f);
 
@@ -64,4 +64,47 @@ glm::mat4 ModelLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up = glm::vec3(
 	model[3] = glm::vec4(pos, 1);
 
 	return model; // 模型->世界的变换矩阵model
+}
+
+/**
+ * @brief 加载纹理
+ * 
+ * @param path 纹理绝对路径或相对于可执行文件的路径
+ * @return unsigned int 纹理对象ID
+ */
+inline unsigned int loadTexture(const char *path)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		stbi_image_free(data);
+	}
+
+	return textureID;
 }

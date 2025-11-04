@@ -4,8 +4,8 @@
 #include <shader.hpp>
 #include <camera.hpp>
 #include <utils.hpp>
-#include <material.hpp>
-#include <light.hpp>
+#include "material.hpp"
+#include "light.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
