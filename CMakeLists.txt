@@ -35,9 +35,16 @@ endforeach()
 # 输出可执行文件路径
 
 #==========================================================================
-# glad（源码库）
-add_library(glad STATIC external/glad/glad.c)
-target_include_directories(glad PUBLIC external)
+# # glad（源码库）
+# add_library(glad STATIC external/glad/glad.c)
+# target_include_directories(glad PUBLIC external)
+
+# glad（预编译库.a）
+add_library(glad STATIC IMPORTED)
+set_target_properties(glad PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/lib/libglad.a
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/external 
+)
 
 # glfw（预编译库.a）
 add_library(glfw STATIC IMPORTED)
@@ -46,18 +53,24 @@ set_target_properties(glfw PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/external # 头文件也一起设置
 )
 
-# imgui
-file(GLOB IMGUI_SRCS
-    external/imgui/*.cpp
-    external/imgui/backends/imgui_impl_glfw.cpp
-    external/imgui/backends/imgui_impl_opengl3.cpp
+# # imgui
+# file(GLOB IMGUI_SRCS
+#     external/imgui/*.cpp
+#     external/imgui/backends/imgui_impl_glfw.cpp
+#     external/imgui/backends/imgui_impl_opengl3.cpp
+# )
+# add_library(imgui STATIC ${IMGUI_SRCS})
+# target_include_directories(imgui PUBLIC 
+#     external/imgui 
+#     external/imgui/backends
+# )
+# target_link_libraries(imgui PUBLIC glfw)  # 前面设置了 glfw 的头文件路径所以不用额外添加
+# imgui（预编译库.a）
+add_library(imgui STATIC IMPORTED)
+set_target_properties(imgui PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/lib/libimgui.a
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/external/imgui;${CMAKE_SOURCE_DIR}/external/imgui/backends"
 )
-add_library(imgui STATIC ${IMGUI_SRCS})
-target_include_directories(imgui PUBLIC 
-    external/imgui 
-    external/imgui/backends
-)
-target_link_libraries(imgui PUBLIC glfw)  # 前面设置了 glfw 的头文件路径所以不用额外添加
 
 # glm,KHR，stb_image(头文件only，不需要额外处理)
 
