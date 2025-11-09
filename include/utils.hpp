@@ -70,14 +70,21 @@ inline glm::mat4 ModelLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up = glm
  * @brief 加载纹理
  * 
  * @param path 纹理绝对路径或相对于可执行文件的路径
+ * @param warpS 纹理S轴包装模式，默认GL_REPEAT,可选GL_MIRRORED_REPEAT, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER
+ * @param warpT 纹理T轴包装模式，默认GL_REPEAT,可选
+ * @param minFilter 缩小过滤器，默认GL_LINEAR_MIPMAP_LINEAR,可选GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR, GL_NEAREST等
+ * @param magFilter 放大过滤器，默认GL_LINEAR,可选GL_NEAREST
+ * @param borderColor 当warp模式为GL_CLAMP_TO_BORDER时，设置边界颜色，默认不设置为纯黑
+ * 
  * @return unsigned int 纹理对象ID
  */
-inline unsigned int loadTexture(const char *path)
+inline unsigned int loadTexture(const char *path, GLenum warpS = GL_REPEAT, GLenum warpT = GL_REPEAT, GLenum minFilter = GL_LINEAR_MIPMAP_LINEAR, GLenum magFilter = GL_LINEAR, std::optional<glm::vec4> borderColor = std::nullopt)
 {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
+	stbi_set_flip_vertically_on_load(true); // 加载时反转图片，因为图片原点一般在左上角，opengl屏幕空间原点左下
 	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
 	if (data)
 	{
@@ -93,10 +100,15 @@ inline unsigned int loadTexture(const char *path)
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warpS);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warpT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+		if (warpS == GL_CLAMP_TO_BORDER || warpT == GL_CLAMP_TO_BORDER){
+			glm::vec4 color = borderColor.value_or(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color));
+		}
 
 		stbi_image_free(data);
 	}
