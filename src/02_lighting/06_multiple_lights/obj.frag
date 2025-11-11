@@ -80,8 +80,6 @@ vec3 calcSpotLight(SpotLight light, vec3 norm, vec3 fragPos, vec3 viewDir);
 void main(){
     vec3 norm = normalize(normal); // world space下的法线
     vec3 viewDir = normalize(viewPos - fragWorldPos); 
-    vec3 texKd = texture(material.Kd, TexCoords).rgb;
-    vec3 texKs = texture(material.Ks, TexCoords).rgb;
 
     // 多光源累加
     vec3 result = vec3(0);
