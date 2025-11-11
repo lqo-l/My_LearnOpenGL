@@ -6,7 +6,7 @@
 #include <shader.hpp>
 #include <camera.hpp>
 #include <utils.hpp>
-#include "light.hpp"
+// #include "light.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
