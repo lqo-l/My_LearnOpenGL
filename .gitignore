@@ -6,3 +6,7 @@ bak
 GPATH
 GTAGS
 GRTAGS
+
+# 不上传的文件
+noload_*/
+blender/

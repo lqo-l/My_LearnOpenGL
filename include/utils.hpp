@@ -120,3 +120,11 @@ inline unsigned int loadTexture(const char *path, GLenum warpS = GL_REPEAT, GLen
 
 	return textureID;
 }
+
+inline unsigned int TextureFromFile(const char *path, const std::string &directory){
+    std::string filename = std::string(path);
+    filename = directory + '/' + filename;
+    
+    unsigned int textureID = loadTexture(filename.c_str());
+    return textureID;
+}

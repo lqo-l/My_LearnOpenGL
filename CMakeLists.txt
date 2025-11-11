@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(MyLearnOpenGL)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE "Debug")
 
 #============================编译配置==========================================
 set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
@@ -10,10 +11,10 @@ set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
 set(CHAPTER_01_beginner_ENABLE OFF)
 set(CHAPTER_01_beginner_DESC "入门")
 
-set(CHAPTER_02_lighting_ENABLE ON)
+set(CHAPTER_02_lighting_ENABLE OFF)
 set(CHAPTER_02_lighting_DESC "光照系统")
 
-set(CHAPTER_03_modelLoading_ENABLE OFF)
+set(CHAPTER_03_modelLoading_ENABLE ON)
 set(CHAPTER_03_modelLoading_DESC "模型加载")
 
 # 章节目录列表
@@ -74,11 +75,19 @@ set_target_properties(imgui PROPERTIES
 
 # glm,KHR，stb_image(头文件only，不需要额外处理)
 
+# assimp(.dll+.a导入库)
+add_library(assimp SHARED IMPORTED)
+set_target_properties(assimp PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/lib/libassimp-6.dll 
+    IMPORTED_IMPLIB ${CMAKE_SOURCE_DIR}/lib/libassimp.dll.a 
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/external/assimp;${CMAKE_SOURCE_DIR}/external/assimp/Compiler;${CMAKE_SOURCE_DIR}/external/assimp/port"
+)
+
 # Windows平台需要的系统库
 if(WIN32)
-    set(LIBS glad glfw imgui opengl32 gdi32 user32)
+    set(LIBS glad glfw imgui assimp opengl32 gdi32 user32)
 else()
-    set(LIBS glad glfw imgui ${CMAKE_DL_LIBS})
+    set(LIBS glad glfw imgui assimp ${CMAKE_DL_LIBS})
 endif()
 
 # 创建接口库,用于子项目继承公共配置
