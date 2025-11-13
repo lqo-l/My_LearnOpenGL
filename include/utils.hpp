@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stb_image.h>
+#include <assimp/scene.h>
 
 namespace fs = std::filesystem;
 
@@ -78,13 +79,15 @@ inline glm::mat4 ModelLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up = glm
  * 
  * @return unsigned int 纹理对象ID
  */
-inline unsigned int loadTexture(const char *path, GLenum warpS = GL_REPEAT, GLenum warpT = GL_REPEAT, GLenum minFilter = GL_LINEAR_MIPMAP_LINEAR, GLenum magFilter = GL_LINEAR, std::optional<glm::vec4> borderColor = std::nullopt)
+inline unsigned int loadTexture(const char *path, GLenum warpS = GL_REPEAT, GLenum warpT = GL_REPEAT, GLenum minFilter = GL_LINEAR_MIPMAP_LINEAR, GLenum magFilter = GL_LINEAR, std::optional<glm::vec4> borderColor = std::nullopt, bool flip = true)
 {
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
-	stbi_set_flip_vertically_on_load(true); // 加载时反转图片，因为图片原点一般在左上角，opengl屏幕空间原点左下
+	if(flip){
+		stbi_set_flip_vertically_on_load(true); // 加载时反转图片，因为图片原点一般在左上角，opengl屏幕空间原点左下
+	}
 	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
 	if (data)
 	{
@@ -121,10 +124,36 @@ inline unsigned int loadTexture(const char *path, GLenum warpS = GL_REPEAT, GLen
 	return textureID;
 }
 
-inline unsigned int TextureFromFile(const char *path, const std::string &directory){
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
-    
-    unsigned int textureID = loadTexture(filename.c_str());
-    return textureID;
+inline unsigned int loadTextureFromAssimp(const aiTexture *aiTex, GLenum warpS = GL_REPEAT, GLenum warpT = GL_REPEAT, GLenum minFilter = GL_LINEAR_MIPMAP_LINEAR, GLenum magFilter = GL_LINEAR, std::optional<glm::vec4> borderColor = std::nullopt){
+	if(aiTex == nullptr){
+		return 0;
+	}
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	GLenum format = GL_RGBA; // assimp中aiTexture数据格式默认为RGBA8888
+	glTexImage2D(GL_TEXTURE_2D, 0, format, aiTex->mWidth, aiTex->mHeight, 0, format, GL_UNSIGNED_BYTE, aiTex->pcData);
+	
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, warpS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, warpT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+	if (warpS == GL_CLAMP_TO_BORDER || warpT == GL_CLAMP_TO_BORDER){
+		glm::vec4 color = borderColor.value_or(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color));
+	}
+
+	return textureID;
 }
+
+// inline unsigned int TextureFromFile(const char *path, const std::string &directory){
+//     std::string filename = std::string(path);
+//     filename = directory + '/' + filename;
+    
+//     unsigned int textureID = loadTexture(filename.c_str());
+//     return textureID;
+// }

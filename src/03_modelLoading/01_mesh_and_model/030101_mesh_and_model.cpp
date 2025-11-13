@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // 创建窗口
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Texture", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Fail to create GLFW window" << std::endl;
@@ -158,14 +158,23 @@ int main(int argc, char **argv)
     glEnableVertexAttribArray(0);
 
     // 外部导入模型
+    // Model ourModel(getAssetAbsPath(argv[0], "assets/03_modelLoading/GuitarBackpack/obj/bag.obj").c_str());
+    // Model ourModel2(getAssetAbsPath(argv[0], "assets/03_modelLoading/GuitarBackpack/fbx/bag.fbx").c_str());
+    // Model ourModel2(getAssetAbsPath(argv[0], "assets/03_modelLoading/noload_xilian/obj/xilian.fbx").c_str());
     Model ourModel(getAssetAbsPath(argv[0], "assets/03_modelLoading/GuitarBackpack/obj/bag.obj").c_str());
+    // Model ourModel2(getAssetAbsPath(argv[0], "assets/03_modelLoading/noload_haiseyin/obj/haiseyin.obj").c_str());
+    Model ourModel3(getAssetAbsPath(argv[0], "assets/03_modelLoading/noload_funingna/obj/funingna.obj").c_str());
+
+    ourModel.Debug();
+    // ourModel2.Debug();
+    ourModel3.Debug();
 
     // 变量
     ImVec4 clear_color{0.2f, 0.3f, 0.3f, 1.0f};
 
     // 光源开启设置
     bool openParallelLight = true;
-    bool openPointLight = false;
+    bool openPointLight = true;
     bool openSpotLight = true;
 
     // 平行光
@@ -173,7 +182,7 @@ int main(int argc, char **argv)
     glm::vec3 parallelLightDirection = glm::vec3(-0.2f, -1.0f, -0.3f); 
     glm::vec3 parallelIa = glm::vec3(0.2f);
     glm::vec3 parallelId = glm::vec3(0.5f);
-    glm::vec3 parallelIs = glm::vec3(0.5f);
+    glm::vec3 parallelIs = glm::vec3(0.2f);
 
     // 点光源
     glm::vec3 pointLightColor = glm::vec3(1.f);
@@ -181,9 +190,9 @@ int main(int argc, char **argv)
     float pointLightConstant = 1.0f;
     float pointLightLinear = 0.09f;
     float pointLightQuadratic = 0.032f;
-    glm::vec3 pointIa = glm::vec3(0.2f);
+    glm::vec3 pointIa = glm::vec3(0.0f);
     glm::vec3 pointId = glm::vec3(0.5f);
-    glm::vec3 pointIs = glm::vec3(0.5f);
+    glm::vec3 pointIs = glm::vec3(0.3f);
 
     // 聚光灯
     glm::vec3 spotLightColor = glm::vec3(1.f);
@@ -195,6 +204,8 @@ int main(int argc, char **argv)
     glm::vec3 spotIa = glm::vec3(0.1f);
     glm::vec3 spotId = glm::vec3(0.6f);
     glm::vec3 spotIs = glm::vec3(0.6f);
+
+    glm::vec3 modelPos = glm::vec3(6.2f, -1.2f, -2.1f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -255,6 +266,18 @@ int main(int argc, char **argv)
 
         ourModel.Draw(objShader);
 
+        /// model2
+        model = glm::translate(glm::mat4(1.f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+        model = glm::scale(model, glm::vec3(1.f, 1.f, 1.f));	
+        objShader.setMat4("model", model);
+        // ourModel2.Draw(objShader);
+
+        /// model3
+        model = glm::translate(glm::mat4(1.f), modelPos); 
+        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	
+        objShader.setMat4("model", model);
+        ourModel3.Draw(objShader);
+
         /// 光源
         model = ModelLookAt(pointLightPos, {0.f, 0.f, 0.f}); // 相机看向原点
         model = glm::scale(model, glm::vec3(0.2f));           // 缩小一些
@@ -275,6 +298,10 @@ int main(int argc, char **argv)
             ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(400, 500), ImGuiCond_FirstUseEver);
             ImGui::Begin("Config");
+
+            /// 模型
+            ImGui::Text("模型位置");
+            ImGui::DragFloat3("模型位置", &modelPos[0], 0.1f);
             
             /// 光源
             if (ImGui::CollapsingHeader("平行光设置", ImGuiTreeNodeFlags_DefaultOpen))

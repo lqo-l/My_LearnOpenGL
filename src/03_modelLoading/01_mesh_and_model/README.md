@@ -1,7 +1,13 @@
-# TODO
-- [ ] 使用父子网格数据结构存储Mesh 
-- [ ] 读取fbx文件
+# Problem
+1. blender导出的fbx、glb格式几乎都没有成功导出纹理，原因不明。仅Princle BSDF的obj可以成功导出，但似乎纹理坐标错误无法正常显示
+2. better fbx Exporter导出的obj和fbx都没有纹理
+3. 中文的纹理路径名无法导入
+4. mtl中有的纹理(hair.png)assimp没有加载进来:修改mtl的纹理路径名时，误将obj与mtl之间的索引名也替换掉了，二者需要对应。
+5. 多个模型加载，texture id会累加：正常，glGenTextures返回的GLuint是GL上下文全局分配的，实际Draw时是根据实例中的索引绘制，不会出问题。
+6. 纹理显示异常: Blender导出obj的可能就是异常的，重新导入Blender检查
 
+# Conclusion
+**唯一可用方式**：解包资源+复制+blender原生Obj导出+手动修改mtl数据和对应纹理文件名为英文
 
 # Assimp
 ## Assimp数据结构
@@ -29,3 +35,6 @@ Model
 # 其他
 aiProcess_FlipUVs: 翻转mTextureCoords中的v坐标为1-v
 stbi_set_flip_vertically_on_load: 翻转实际的data数据data[y] = data[height - y]
+
+# demo
+![结果图](success.png)
